@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+.linksAcao {
+  margin-bottom: 10px; /* Espaço abaixo dos links */
+}
+
+  .linksAcao .itemTabela {
+      color: blue; /* Cor dos links */
+      text-decoration: none; /* Remover sublinhado */
+      margin-right: 10px; /* Espaço entre os links */
+  }
+
+/* Estilo para a caixa seletora no cabeçalho */
+.table thead th input[type="checkbox"] {
+  margin-left: 10px; /* Espaço à esquerda da caixa seletora */
+}
+
+/* Estilo para a caixa seletora em cada linha */
+.table tbody tr td input[type="checkbox"] {
+  margin-left: 10px; /* Espaço à esquerda da caixa seletora */
+}
+
+/* Estilo para linhas selecionadas */
+.selected {
+  background-color: #0081cf; /* Azul claro */
+  transition: background-color 0.3s ease-in-out; /* Transição suave */
+}
