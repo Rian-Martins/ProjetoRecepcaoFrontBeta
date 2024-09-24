@@ -32,10 +32,15 @@ const pedidoPost = async (alunoSelecionado, setData, abrirFecharModalIncluir) =>
   try {
     const alunoId = uuidv4(); // Gera um Guid válido para o aluno
 
-    // Validação simples para garantir que os campos obrigatórios estão preenchidos
-    if (!alunoSelecionado.nome || !alunoSelecionado.horario || !alunoSelecionado.data) {
+    // Validação simples para garantir que os campos obrigatórios dos modais estão preenchidos
+    if (!alunoSelecionado.diaSemana || !alunoSelecionado.nome /*|| !alunoSelecionado.horario */|| !alunoSelecionado.data) {
       console.error('Campos obrigatórios faltando');
       return;
+    }
+
+    // Se diaSemana for um array de objetos, converte para uma string com os dias
+    if (Array.isArray(alunoSelecionado.diaSemana)) {
+      alunoSelecionado.diaSemana = alunoSelecionado.diaSemana.map(item => item.semana).join(", ");
     }
 
     const alunoParaCriar = {
@@ -44,12 +49,12 @@ const pedidoPost = async (alunoSelecionado, setData, abrirFecharModalIncluir) =>
       horario: alunoSelecionado.horario,
       data: formatDate(alunoSelecionado.data), // Formata a data para yyyy-MM-dd
       professor: alunoSelecionado.professor,
-      diaSemana: alunoSelecionado.diaSemana,
-      alunoHorarios: alunoSelecionado.alunoHorarios?.map(horario => ({
-        id: uuidv4(), // Gera um Guid válido para AlunoHorario
-        alunoId: alunoId, // Usa o mesmo id que está sendo gerado para o aluno
-        horario: horario.horario
-      })) || [], // Garante que, se alunoHorarios for vazio ou indefinido, ele será tratado
+      diaSemana: alunoSelecionado.diaSemana, // Agora é uma string
+      // alunoHorarios: alunoSelecionado.alunoHorarios?.map(horario => ({
+      //   id: uuidv4(), // Gera um Guid válido para AlunoHorario
+      //   alunoId: alunoId, // Usa o mesmo id que está sendo gerado para o aluno
+      //   horario: horario.horario
+      // })) || [], // Garante que, se alunoHorarios for vazio ou indefinido, ele será tratado
     };
 
     const response = await axios.post(creUrl, alunoParaCriar, {
@@ -68,8 +73,6 @@ const pedidoPost = async (alunoSelecionado, setData, abrirFecharModalIncluir) =>
     console.error('Erro ao criar aluno:', error.response ? error.response.data : error.message);
   }
 };
-
-
 
 
 

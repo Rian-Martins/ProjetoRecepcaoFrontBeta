@@ -32,9 +32,7 @@ function MatriculaPage() {
       horario: '',
       data: '',
       professor: '',
-      diaSemana:'',
-      alunoHorarios: []
-      
+      diaSemana:''        
     });
     const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
   
@@ -59,7 +57,7 @@ function MatriculaPage() {
       });
       setModalIncluir(!modalIncluir);
     };
-  
+  console.log("dados setAlunoSelecionado",alunoSelecionado)
     const abrirFecharModalEditar = () => {
       setModalEditar(!modalEditar);
     };
@@ -95,20 +93,33 @@ function MatriculaPage() {
       localStorage.setItem('setHorarioSelecionado', horario);
     };
   
+    // const handleDiaChange = (e) => {
+    //   const dia = e.target.value;
+    //   const diaSemanaObj = {        
+    //     diaSemana: dia, // Armazena o dia selecionado
+    //   };
+    // console.log("valor dia", dia)
+    //   setDiaSelecionado(dia);
+    //   setAlunoSelecionado(prevState => ({
+    //     ...prevState,
+    //     diaSemana: [diaSemanaObj] // Atualiza o dia da semana como um objeto no array//MECHI AQUI
+    //   }));
+    //   localStorage.setItem('setDiaSelecionado', dia);
+    // };
+    // Atualizar a função handleDiaChange para armazenar apenas um dia
     const handleDiaChange = (e) => {
       const dia = e.target.value;
-      const diaSemanaObj = {
-        id: uuidv4(), // Gera um GUID único para o dia da semana
-        diaSemana: dia, // Armazena o dia selecionado
-      };
-    
       setDiaSelecionado(dia);
+      
+      // Atualiza o estado do alunoSelecionado para incluir o dia selecionado
       setAlunoSelecionado(prevState => ({
         ...prevState,
-        alunoDiaSemana: [diaSemanaObj] // Atualiza o dia da semana como um objeto no array
+        diaSemana: dia // Atualiza diretamente para uma string
       }));
+      
       localStorage.setItem('setDiaSelecionado', dia);
     };
+    
   
   
     const atualizarTabelaPorHorario = (horario) => {
@@ -139,9 +150,7 @@ function MatriculaPage() {
         horario: '',
         data: '',
         professor: '',
-        diaSemana: '',
-        alunoHorarios: [],
-        
+        diaSemana: ''                
       });
     };
     const toggleSidebar = () => {
@@ -300,7 +309,7 @@ function MatriculaPage() {
                   <select
                     className="form-control"
                     name="horario"
-                    onChange={handleChange}
+                    onChange={handleHorarioChange}
                     value={alunoSelecionado.horario}
                   >
                     <option value="">Selecione um horário</option>
@@ -325,17 +334,18 @@ function MatriculaPage() {
                     value={alunoSelecionado.professor}
                   />
                   <label>Dia da Semana:</label>
-                  <select
-                    className="form-control"
-                    name="diaSemana"
-                    onChange={handleDiaChange}
-                    value={diaSelecionado}
-                  >
-                    <option value="">Selecione um dia</option>
-                    {semana.map((dia, index) => (
-                      <option key={index} value={dia}>{dia}</option>
-                    ))}
-                  </select>
+                    <select
+                      className="form-control"
+                      name="diaSemana"
+                      onChange={handleDiaChange} // O evento chamará a função atualizada
+                      value={alunoSelecionado.diaSemana} // Atualiza para usar o estado correto
+                    >
+                      <option value="">Selecione um dia</option>
+                      {semana.map((dia, index) => (
+                        <option key={index} value={dia}>{dia}</option>
+                      ))}
+                    </select>
+
                 </div>
               </ModalBody>
               <ModalFooter>
