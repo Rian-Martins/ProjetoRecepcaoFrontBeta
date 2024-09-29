@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { v4 as uuidv4} from 'uuid';
 
+
+
 const baseUrl = "https://localhost:44388/api/alunos/listar";
 const creUrl = "https://localhost:44388/api/alunos/criar";
 const editUrl = id => `https://localhost:44388/api/alunos/${id}`;
@@ -77,20 +79,30 @@ const pedidoPost = async (alunoSelecionado, setData, abrirFecharModalIncluir) =>
 
 
 
-const pedidoPut = async (alunoParaAtualizar, setData, abrirFecharModalEditar) => {
+const pedidoPut = async (AlunoSelecionado, setData, abrirFecharModalEditar) => {
   try {
-    const response = await axios.put(editUrl(alunoParaAtualizar.id), alunoParaAtualizar, {
+    // Usa a função editUrl para gerar a URL com o alunoId
+    const url = editUrl(AlunoSelecionado.alunoId);
+
+    // Faz a requisição PUT
+    const response = await axios.put(url, AlunoSelecionado, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
 
-    console.log("Aluno atualizado com sucesso:", response.data);
+    // Processa a resposta
+    console.log(response.data);
+    setData(response.data);
     abrirFecharModalEditar();
   } catch (error) {
     console.error("Erro ao atualizar aluno:", error);
   }
-}
+};
+
+
+
+
 
 const pedidoDelete = async (id, setData, abrirFecharModalExcluir) => {
   try {

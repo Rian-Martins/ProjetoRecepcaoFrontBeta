@@ -9,11 +9,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 function MatriculaPage() {
     const [data, setData] = useState([]);
+    
     const [originalData, setOriginalData] = useState([]);
   
     /*modal */
     const [modalIncluir, setModalIncluir] = useState(false);
-    const [modalEditar, setModalEditar] = useState(false);
+    const [modalEditar, setModalEditar] = useState(false)
     const [modalExcluir, setModalExcluir] = useState(false);
     const [modalEscolherHorario, setModalEscolherHorario] = useState(false);
     const [modalSistemaCores, setModalSistemaCores] = useState(false);
@@ -22,6 +23,7 @@ function MatriculaPage() {
     const [horarioSelecionado, setHorarioSelecionado] = useState('');
     const [diaSelecionado, setDiaSelecionado] = useState('');
     const [selectedAluno, setSelectedAluno] = useState(null);
+    
     const [sidebarAberto, setSidebarAberto] = useState(() => {
       const saved = localStorage.getItem('sidebarAberto');
       return saved === 'true';
@@ -58,9 +60,31 @@ function MatriculaPage() {
       setModalIncluir(!modalIncluir);
     };
   console.log("dados setAlunoSelecionado",alunoSelecionado)
-    const abrirFecharModalEditar = () => {
-      setModalEditar(!modalEditar);
-    };
+
+  
+  //metodo para abrir e fechar o modal de editar
+  const abrirFecharModalEditar = () => {
+    if (setAlunoSelecionado && alunoSelecionado.id ) {
+       // Adicione esta linha
+      setModalEditar(true)
+    }
+    setModalEditar(!modalEditar);
+    console.log("Dados para o put:",alunoSelecionado)
+  };
+
+  const handleRowClick = aluno => {
+    console.log('Aluno selecionado:', aluno); // Debug para verificar se o aluno foi selecionado
+    try{
+      if (aluno && aluno.id) {
+        setAlunoSelecionado(aluno);  // Atualiza o aluno selecionado
+        setModalEditar(true);        // Abre o modal de edição
+      }
+    }catch{
+
+    }
+    
+  };
+      
   
     const abrirFecharModalExcluir = () => {
       setModalExcluir(!modalExcluir);
@@ -73,10 +97,10 @@ function MatriculaPage() {
       }
     };
   
-    const handleRowClick = aluno => {
-      setSelectedAluno(aluno);
-      setAlunoSelecionado(aluno);
-    };
+    
+    
+    
+    
   
     const handleChange = e => {
       const { name, value } = e.target;
@@ -86,27 +110,22 @@ function MatriculaPage() {
       });
     };
   
+    //meche amplamente no label Horario dos models
     const handleHorarioChange = (e) => {
       const horario = e.target.value;
       setHorarioSelecionado(horario);
+      
+      // Atualiza o alunoSelecionado com o horário escolhido
+      setAlunoSelecionado(prevState => ({
+        ...prevState,
+        horario
+      }));
+    
       atualizarTabelaPorHorario(horario);
       localStorage.setItem('setHorarioSelecionado', horario);
     };
+    
   
-    // const handleDiaChange = (e) => {
-    //   const dia = e.target.value;
-    //   const diaSemanaObj = {        
-    //     diaSemana: dia, // Armazena o dia selecionado
-    //   };
-    // console.log("valor dia", dia)
-    //   setDiaSelecionado(dia);
-    //   setAlunoSelecionado(prevState => ({
-    //     ...prevState,
-    //     diaSemana: [diaSemanaObj] // Atualiza o dia da semana como um objeto no array//MECHI AQUI
-    //   }));
-    //   localStorage.setItem('setDiaSelecionado', dia);
-    // };
-    // Atualizar a função handleDiaChange para armazenar apenas um dia
     const handleDiaChange = (e) => {
       const dia = e.target.value;
       setDiaSelecionado(dia);
@@ -159,21 +178,26 @@ function MatriculaPage() {
       // Salva o novo estado no localStorage
       localStorage.setItem('sidebarAberto', novoEstado);
     };
+
+  
   
     useEffect(() => {
       const loadData = async () => {
         const response = await pedidoGet(setData, setOriginalData);
-        console.log("Dados da API:", response);//está chegando aqui
-        const storedHorario = localStorage.getItem('setHorarioSelecionado');
-        if (storedHorario) {
-          setHorarioSelecionado(storedHorario);
-          setData(response.filter(aluno => aluno.horario === storedHorario));
-        } else {
+        console.log("Dados da API:", response);
+    
+        // Verifique se `response` é um array
+        if (Array.isArray(response)) {
           setData(response);
+          setOriginalData(response);
+        } else {
+          console.error("A resposta da API não é um array:", response);
         }
       };
       loadData();
     }, []);
+    
+    
   
     useEffect(() => {
       if (modalEscolherHorario && alunoSelecionado.data) {
@@ -181,26 +205,28 @@ function MatriculaPage() {
       }
     }, [alunoSelecionado.data, modalEscolherHorario, originalData]);
   
+
+    //organização dos dados na tabela
     const organizarPorDiaEHorario = (alunos) => {
-      const matriz = {};
+      if (!Array.isArray(alunos)) {
+        console.error("O argumento 'alunos' não é um array:", alunos);
+        return {};
+      }
     
-      // Definir os dias da semana e horários
+      const matriz = {};
       semana.forEach(dia => {
-        matriz[dia] = {}; // Inicializa a matriz para cada dia
+        matriz[dia] = {};
         horarios.forEach(horario => {
-          matriz[dia][horario] = []; // Inicializa cada horário com array vazio
+          matriz[dia][horario] = [];
         });
       });
     
-      // Organizar os alunos por dia da semana e horário
       alunos.forEach(aluno => {
         let diaSemanaNormalizado = aluno.diaSemana.charAt(0).toUpperCase() + aluno.diaSemana.slice(1).toLowerCase();
-        
         const { horario } = aluno;
     
-        // Garantir que o dia da semana e o horário existam na matriz
         if (semana.includes(diaSemanaNormalizado) && matriz[diaSemanaNormalizado][horario]) {
-          matriz[diaSemanaNormalizado][horario].push(aluno); // Adiciona o aluno ao dia e horário corretos
+          matriz[diaSemanaNormalizado][horario].push(aluno);
         } else {
           console.warn(`Dia ou horário inválido para o aluno ${aluno.nome}`);
         }
@@ -208,6 +234,7 @@ function MatriculaPage() {
     
       return matriz;
     };
+    
     
     
     const matrizAlunos = organizarPorDiaEHorario(data);
@@ -226,7 +253,7 @@ function MatriculaPage() {
             
             <header>
               <button className="btn btn-primary btn-esc" onClick={abrirFecharModalEscolherHorario}>Escolher Horário</button>
-              {selectedAluno && (
+              {setAlunoSelecionado && (
                 <>
                   <button className="btn btn-primary btn-edit" onClick={abrirFecharModalEditar}>Editar Aluno</button>
                   <button className="btn btn-danger btn-exc" onClick={abrirFecharModalExcluir}>Excluir Aluno</button>
@@ -249,7 +276,11 @@ function MatriculaPage() {
               <tbody>
                 {horarios.map((horario, index) => {
                   // Verifica se existe algum aluno no horário e dia especificado
-                  const hasAlunos = semana.some((dia) => matrizAlunos[dia] && matrizAlunos[dia][horario] && matrizAlunos[dia][horario].length > 0);
+                  const hasAlunos = semana.some((dia) => 
+                    matrizAlunos[dia] && 
+                    matrizAlunos[dia][horario] && 
+                    matrizAlunos[dia][horario].length > 0
+                  );
 
                   // Se não houver alunos, pula a renderização da linha
                   if (!hasAlunos) {
@@ -268,13 +299,16 @@ function MatriculaPage() {
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                               {matrizAlunos[dia][horario].map((aluno, alunoIdx) => (
                                 <div 
-                                  key={alunoIdx} 
-                                  className="aluno-nome" 
-                                  onClick={() => setSelectedAluno(aluno)} // Atualiza o estado com o aluno clicado
-                                  style={{ cursor: 'pointer', backgroundColor: selectedAluno === aluno ? '#e0e0e0' : 'transparent' }} // Realça o aluno selecionado
-                                >
-                                  {aluno.nome}
-                                </div>
+                                key={alunoIdx} 
+                                className="aluno-nome" 
+                                onClick={() => {
+                                  handleRowClick(aluno);
+                                  setAlunoSelecionado(aluno)                                                                     
+                                }} // Chama o handleRowClick em vez de setSelectedAluno diretamente
+                                style={{ cursor: 'pointer', backgroundColor: alunoSelecionado === aluno ? '#e0e0e0' : 'transparent' }} // Realça o aluno selecionado
+                              >
+                                {aluno.nome}
+                              </div>
                               ))}
                             </div>
                           ) : null /* Não exibe nada se não houver alunos */}
@@ -284,6 +318,8 @@ function MatriculaPage() {
                   );
                 })}
               </tbody>
+
+
             </table>
 
   
@@ -411,10 +447,11 @@ function MatriculaPage() {
                       <option key={index} value={dia}>{dia}</option>
                     ))}
                   </select>
+                 
                 </div>
               </ModalBody>
               <ModalFooter>
-                <button className="btn btn-primary" onClick={() => pedidoPut(alunoSelecionado, setData, abrirFecharModalEditar)}>Editar</button>{" "}
+                <button className="btn btn-primary" onClick={() => pedidoPut(alunoSelecionado, setData, abrirFecharModalEditar)}>Editar</button>
                 <button className="btn btn-danger" onClick={abrirFecharModalEditar}>Cancelar</button>
               </ModalFooter>
             </Modal>

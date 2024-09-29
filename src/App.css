@@ -163,6 +163,7 @@ table {
   width: 100%;  /* Ocupar toda a largura do container */
   height: 100%; /* Ocupar toda a altura disponível */
   border-collapse: collapse;
+  text-align: center;
   
 }
 
