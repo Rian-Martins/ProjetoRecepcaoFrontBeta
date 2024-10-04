@@ -3,7 +3,7 @@ import '../App.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { baseUrl, pedidoGet, pedidoPost, pedidoPut, pedidoDelete } from '../apiService.js';
+import { pedidoGetRematricula,pedidoPostRematricula, pedidoPutRematricula, /*pedidoDeleteRematricula*/ } from '../apiServiceRematricula.js';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -187,7 +187,7 @@ function ReposicaoPage() {
   
     useEffect(() => {
       const loadData = async () => {
-        const response = await pedidoGet(setData, setOriginalData);
+        const response = await pedidoGetRematricula(setData, setOriginalData);
         console.log("Dados da API:", response);
     
         // Verifique se `response` é um array
@@ -389,7 +389,7 @@ function ReposicaoPage() {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <button className="btn btn-primary" onClick={() => pedidoPost(alunoSelecionado, setData, abrirFecharModalIncluir)}>
+                <button className="btn btn-primary" onClick={() => pedidoPostRematricula(alunoSelecionado, setData, abrirFecharModalIncluir)}>
                   Incluir
                 </button>{" "}
                 <button className="btn btn-danger" onClick={abrirFecharModalIncluir}>Cancelar</button>
@@ -455,25 +455,25 @@ function ReposicaoPage() {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <button className="btn btn-primary" onClick={() => pedidoPut(alunoSelecionado, setData, abrirFecharModalEditar)}>Editar</button>
+                <button className="btn btn-primary" onClick={() => pedidoPutRematricula(alunoSelecionado, setData, abrirFecharModalEditar)}>Editar</button>
                 <button className="btn btn-danger" onClick={abrirFecharModalEditar}>Cancelar</button>
               </ModalFooter>
             </Modal>
   
-            <Modal isOpen={modalExcluir}>
+            {/* <Modal isOpen={modalExcluir}>
               <ModalHeader>Excluir Aluno</ModalHeader>
               <ModalBody>
                 <p>Tem certeza que deseja excluir o aluno {alunoSelecionado.nome}?</p>
               </ModalBody>
               <ModalFooter>
                 <button className="btn btn-danger" onClick={() => {
-                  pedidoDelete(alunoSelecionado.id, setData, abrirFecharModalExcluir);
+                  pedidoDeleteRematricula(alunoSelecionado.id, setData, abrirFecharModalExcluir);
                 }}>
                   Excluir
                 </button>
                 <button className="btn btn-secondary" onClick={abrirFecharModalExcluir}>Cancelar</button>
               </ModalFooter>
-            </Modal>
+            </Modal> */}
   
             {/* Modal de Escolher Horário */}
             <Modal isOpen={modalEscolherHorario}>

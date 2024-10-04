@@ -109,7 +109,7 @@ function Home() {
         <h3>Selecione a planilha que preferir</h3>
 
         <button className="btn btn-primary" onClick={abrirFecharModalEscolhaPlanilhaDia}>
-          Planilha de Reposição
+          Filtro da Planilha de Matricula
         </button>
 
         <Modal isOpen={modalEscolhaPlanilhaDia}>
