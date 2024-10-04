@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Home from './Pages/Home';
 import MatriculaPage from './Pages/MatriculaPage';
 import ReposicaoPage from './Pages/ReposicaoPage';
+import ImportDataFromExcel from './Pages/ImportDataFromExcel';
 
 function App() {
   const [sidebarAberto, setSidebarAberto] = useState(() => {
@@ -27,6 +28,7 @@ function App() {
             <Link to="/Home">Página Inicial</Link>
             <Link to="/MatriculaPage">Planilha de Matrícula</Link>
             <Link to="/ReposicaoPage">Planilha de Reposição</Link>
+            <Link to="/ImportDataFromExcel">Importar dados da Tabela Reposição</Link>
           </nav>
         </div>
         <div className="main-content" id="main-content">        
@@ -34,6 +36,7 @@ function App() {
             <Route path="/Home" element={<Home/>}/>
             <Route path="/MatriculaPage" element={<MatriculaPage />} />
             <Route path="/ReposicaoPage" element={<ReposicaoPage />} />
+            <Route path="/ImportDataFromExcel" element={<ImportDataFromExcel />} />
           </Routes>
         </div>
       </Router>

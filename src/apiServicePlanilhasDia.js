@@ -1,7 +1,7 @@
-// apiServicePlanilhasDia.js
+// apiServicePlanilhasDia.js para a rematricula
 export const pedidoDiaGet = async (data, horario) => {
   try {
-    const response = await fetch(`https://localhost:44388/api/alunos/pesquisar/data/${data}/horario/${horario}`);
+    const response = await fetch(`https://localhost:44388/api/alunosreposicao/listar/data/${data}/horario/${horario}`);
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
     }
