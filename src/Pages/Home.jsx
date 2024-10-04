@@ -163,26 +163,32 @@ function Home() {
                 const alunosPorHorario = matrizAlunos[horario] || {};
                 return (
                   <tr key={index}>
-                    {semana.map((dia, idx) => (
-                      <td key={idx}>
-                        {alunosPorHorario[dia]?.map((aluno, alunoIdx) => (
-                          <div
-                            key={alunoIdx}
-                            className="aluno-nome"
-                            onClick={() => handleRowClick(aluno)}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            {aluno.nome}
-                          </div>
-                        ))}
-                      </td>
-                    ))}
+                    {semana.map((dia, idx) => {
+                      const alunosDoDia = alunosPorHorario[dia] || [];
+                      return (
+                        <td key={idx}>
+                          {alunosDoDia.length > 0 ? (
+                            alunosDoDia.map((aluno, alunoIdx) => (
+                              <div
+                                key={alunoIdx}
+                                className="aluno-nome"
+                                onClick={() => handleRowClick(aluno)}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                {aluno.nome}
+                              </div>
+                            ))
+                          ) : null} {/* Renderiza null se não houver alunos, removendo linhas vazias */}
+                        </td>
+                      );
+                    })}
                   </tr>
                 );
               })}
             </tbody>
           </table>
         )}
+
       </div>
     </div>
   );
