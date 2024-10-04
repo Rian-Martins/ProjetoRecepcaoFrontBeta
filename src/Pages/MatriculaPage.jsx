@@ -17,12 +17,12 @@ function MatriculaPage() {
     const [modalEditar, setModalEditar] = useState(false)
     const [modalExcluir, setModalExcluir] = useState(false);
     const [modalEscolherHorario, setModalEscolherHorario] = useState(false);
-    const [modalSistemaCores, setModalSistemaCores] = useState(false);
+    
     /*fim do modal */
   
     const [horarioSelecionado, setHorarioSelecionado] = useState('');
     const [diaSelecionado, setDiaSelecionado] = useState('');
-    const [selectedAluno, setSelectedAluno] = useState(null);
+    
     
     const [sidebarAberto, setSidebarAberto] = useState(() => {
       const saved = localStorage.getItem('sidebarAberto');
@@ -85,10 +85,14 @@ function MatriculaPage() {
     
   };
       
-  
+    //metodo para abrir e fechar modal excluir
     const abrirFecharModalExcluir = () => {
-      setModalExcluir(!modalExcluir);
+      if (alunoSelecionado) {
+        setModalExcluir(!modalExcluir);
+      }
     };
+  
+  
   
     const abrirFecharModalEscolherHorario = () => {
       setModalEscolherHorario(!modalEscolherHorario);
@@ -256,7 +260,7 @@ function MatriculaPage() {
               {setAlunoSelecionado && (
                 <>
                   <button className="btn btn-primary btn-edit" onClick={abrirFecharModalEditar}>Editar Aluno</button>
-                  <button className="btn btn-danger btn-exc" onClick={abrirFecharModalExcluir}>Excluir Aluno</button>
+                  {/* <button className="btn btn-danger btn-exc" onClick={abrirFecharModalExcluir}>Excluir Aluno</button> */}
                 </>
               )}
               <button className="btn btn-success" onClick={abrirFecharModalIncluir}>Adicionar Aluno</button>
@@ -456,14 +460,18 @@ function MatriculaPage() {
               </ModalFooter>
             </Modal>
   
-            {/* Modal de Excluir Aluno */}
             <Modal isOpen={modalExcluir}>
+              <ModalHeader>Excluir Aluno</ModalHeader>
               <ModalBody>
-                Confirma a exclusão deste(a) aluno(a): {alunoSelecionado.nome} ?
+                <p>Tem certeza que deseja excluir o aluno {alunoSelecionado.nome}?</p>
               </ModalBody>
               <ModalFooter>
-                <button className="btn btn-danger" onClick={() => pedidoDelete(alunoSelecionado.id, setData, abrirFecharModalExcluir)}>Sim</button>
-                <button className="btn btn-secondary" onClick={abrirFecharModalExcluir}>Não</button>
+                <button className="btn btn-danger" onClick={() => {
+                  pedidoDelete(alunoSelecionado.id, setData, abrirFecharModalExcluir);
+                }}>
+                  Excluir
+                </button>
+                <button className="btn btn-secondary" onClick={abrirFecharModalExcluir}>Cancelar</button>
               </ModalFooter>
             </Modal>
   

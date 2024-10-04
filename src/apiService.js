@@ -51,12 +51,7 @@ const pedidoPost = async (alunoSelecionado, setData, abrirFecharModalIncluir) =>
       horario: alunoSelecionado.horario,
       data: formatDate(alunoSelecionado.data), // Formata a data para yyyy-MM-dd
       professor: alunoSelecionado.professor,
-      diaSemana: alunoSelecionado.diaSemana, // Agora é uma string
-      // alunoHorarios: alunoSelecionado.alunoHorarios?.map(horario => ({
-      //   id: uuidv4(), // Gera um Guid válido para AlunoHorario
-      //   alunoId: alunoId, // Usa o mesmo id que está sendo gerado para o aluno
-      //   horario: horario.horario
-      // })) || [], // Garante que, se alunoHorarios for vazio ou indefinido, ele será tratado
+      diaSemana: alunoSelecionado.diaSemana
     };
 
     const response = await axios.post(creUrl, alunoParaCriar, {
@@ -105,6 +100,7 @@ const pedidoPut = async (AlunoSelecionado, setData, abrirFecharModalEditar) => {
 
 
 const pedidoDelete = async (id, setData, abrirFecharModalExcluir) => {
+  console.log('ID do aluno a ser excluído:', id); // Verifique o ID aqui
   try {
     const response = await axios.delete(delUrl(id));
     if (response.status === 200) {
@@ -116,6 +112,7 @@ const pedidoDelete = async (id, setData, abrirFecharModalExcluir) => {
   } catch (error) {
     console.error('Erro ao excluir aluno:', error);
   }
-}
+};
+
 
 export { baseUrl, creUrl, editUrl, delUrl, pedidoGet, pedidoPost, pedidoPut, pedidoDelete };
