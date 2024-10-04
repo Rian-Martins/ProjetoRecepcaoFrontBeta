@@ -1,7 +1,7 @@
 // apiServicePlanilhasDia.js
-export const pedidoDiaGet = async (data) => {
+export const pedidoDiaGet = async (data, horario) => {
   try {
-    const response = await fetch(`https://localhost:44388/api/alunos/pesquisar/data/${data}`);
+    const response = await fetch(`https://localhost:44388/api/alunos/pesquisar/data/${data}/horario/${horario}`);
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
     }

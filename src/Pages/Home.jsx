@@ -5,16 +5,15 @@ import { pedidoDiaGet } from '../apiServicePlanilhasDia.js';
 import '../App.js';
 
 function Home() {
-  const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]);
-  const [matrizAlunos, setMatrizAlunos] = useState({});
+  const [data, setData] = useState([]); // Armazena os alunos filtrados por data e horário
+  const [originalData, setOriginalData] = useState([]); // Armazena todos os alunos
+  const [matrizAlunos, setMatrizAlunos] = useState({}); // Matriz de alunos para a tabela
   const [selectedDate, setSelectedDate] = useState("");
   const [modalEscolhaPlanilhaDia, setModalEscolhaPlanilhaDia] = useState(false);
   const [alunoSelecionado, setAlunoSelecionado] = useState({ data: '' });
-  const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
+  const [horariosDisponiveis, setHorariosDisponiveis] = useState([]); // Lista de horários disponíveis
   const [planilhaCarregada, setPlanilhaCarregada] = useState(false);
   const [horarioSelecionado, setHorarioSelecionado] = useState('');
-  const [loadingHorarios, setLoadingHorarios] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
 
   const semana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
@@ -26,97 +25,60 @@ function Home() {
     "20:50 - 21:30"
   ];
 
-  // Função para abrir e fechar o modal
   const abrirFecharModalEscolhaPlanilhaDia = () => {
     setModalEscolhaPlanilhaDia(!modalEscolhaPlanilhaDia);
   };
 
-  // Atualiza os horários disponíveis com base na data selecionada
-  // const atualizarHorariosDisponiveis = (dataSelecionada) => {
-  //   setLoadingHorarios(true);
-
-  //   const horariosDisponiveisParaData = originalData
-  //     .filter(aluno => aluno.data === dataSelecionada)
-  //     .map(aluno => aluno.horario);
-
-  //   const horariosUnicos = [...new Set(horariosDisponiveisParaData)];
-  //   setHorariosDisponiveis(horariosUnicos);
-  //   setLoadingHorarios(false);
-  // };
   useEffect(() => {
     const fetchData = async () => {
-      setLoadingData(true);
-      const dados = await pedidoDiaGet(selectedDate);
-      setOriginalData(dados);
-      setLoadingData(false);
-      console.log("Dados carregados:", dados);
+      if (selectedDate && horarioSelecionado) {
+        setLoadingData(true);
+        const dados = await pedidoDiaGet(selectedDate, horarioSelecionado); // Passando a data e o horário
+        setOriginalData(dados);
+        setData(dados); // Atualiza a tabela com os dados filtrados
+        setLoadingData(false);
+      }
     };
-  
-    if (selectedDate) {
-      fetchData();
-      atualizarHorariosDisponiveis(selectedDate); // Chama a função para atualizar os horários
-    }
-  }, [selectedDate]);
-  
-  const atualizarHorariosDisponiveis = (dataSelecionada) => {
-    setLoadingHorarios(true);
-    const horariosDisponiveisParaData = originalData
-      .filter(aluno => aluno.data === dataSelecionada)
-      .map(aluno => aluno.horario);
-  
-    const horariosUnicos = [...new Set(horariosDisponiveisParaData)];
-    console.log("Horários disponíveis:", horariosUnicos); // Verifica se está preenchido
-    setHorariosDisponiveis(horariosUnicos);
-    setLoadingHorarios(false);
-  };
-  
 
-  // Carregar dados ao selecionar uma data
+    fetchData();
+  }, [selectedDate, horarioSelecionado]); // Atualiza quando a data ou horário selecionados mudarem
+
+  // Adicione este useEffect para buscar horários disponíveis quando a data mudar
   useEffect(() => {
-    const fetchData = async () => {
-      setLoadingData(true);
-      const dados = await pedidoDiaGet(selectedDate);
-      setOriginalData(dados);
-      setLoadingData(false);
+    const fetchHorariosDisponiveis = async () => {
+      if (selectedDate) {
+        // Se houver uma função para buscar horários disponíveis, você deve implementá-la aqui
+        // Exemplo: const horarios = await buscarHorariosDisponiveis(selectedDate);
+        // setHorariosDisponiveis(horarios);
+        
+        // Para exemplo, vamos considerar que você tem todos os horários disponíveis
+        setHorariosDisponiveis(horarios);
+      }
     };
 
-    if (selectedDate) {
-      fetchData();
-    }
-  }, [selectedDate]);
+    fetchHorariosDisponiveis();
+  }, [selectedDate]); // Atualiza quando a data mudar
 
   const handleHorarioChange = (e) => {
     const horario = e.target.value;
     setHorarioSelecionado(horario);
-    atualizarTabelaPorHorario(horario);
   };
 
   const handleDateChange = (event) => {
     const date = event.target.value;
     setSelectedDate(date);
-    atualizarHorariosDisponiveis(date);
-  };
-
-  // Filtra os alunos por horário
-  const atualizarTabelaPorHorario = (horario) => {
-    if (horario && selectedDate) {
-      const alunosFiltrados = originalData.filter(aluno => aluno.horario === horario && aluno.data === selectedDate);
-      setData(alunosFiltrados);
-    } else {
-      setData(originalData);
-    }
+    setHorarioSelecionado(''); // Limpa a seleção de horário ao mudar a data
   };
 
   const incluirPlanilhaDia = async () => {
-    if (selectedDate) { // Verifique apenas a data
-      const alunosPorDia = await pedidoDiaGet(selectedDate);
+    if (selectedDate && horarioSelecionado) { // Verifica data e horário
+      const alunosPorDia = await pedidoDiaGet(selectedDate, horarioSelecionado);
   
       if (Array.isArray(alunosPorDia)) {
         const matriz = {};
         alunosPorDia.forEach(aluno => {
           const { diaSemana, horario } = aluno;
   
-          // Adiciona todos os alunos, independentemente do horário
           matriz[horario] = matriz[horario] || {};
           matriz[horario][diaSemana] = matriz[horario][diaSemana] || [];
           matriz[horario][diaSemana].push(aluno);
@@ -130,10 +92,9 @@ function Home() {
         console.error("Dados retornados não são um array:", alunosPorDia);
       }
     } else {
-      alert("Por favor, selecione uma data."); // Remover mensagem sobre horário
+      alert("Por favor, selecione uma data e um horário.");
     }
   };
-  
 
   const handleRowClick = (aluno) => {
     setAlunoSelecionado(aluno);
@@ -167,18 +128,14 @@ function Home() {
                 className="form-control"
                 value={horarioSelecionado}
                 onChange={handleHorarioChange}
-                disabled={loadingHorarios}
+                disabled={horariosDisponiveis.length === 0}
               >
                 <option value="">Selecione um horário</option>
-                {loadingHorarios ? (
-                  <option>Carregando horários...</option>
-                ) : (
-                  horariosDisponiveis.map((horario, index) => (
-                    <option key={index} value={horario}>
-                      {horario}
-                    </option>
-                  ))
-                )}
+                {horariosDisponiveis.map((horario, index) => (
+                  <option key={index} value={horario}>
+                    {horario}
+                  </option>
+                ))}
               </select>
             </div>
           </ModalBody>
