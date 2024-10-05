@@ -198,3 +198,91 @@ td.empty {
   padding: 6px 6px;
   margin-right: 2rem;
 }
+
+
+/*Arquivo de exportação e importação excel*/
+.layout-container-Imp-Exp {
+  width: 120%;
+  max-width: 120%;
+  border-radius: 30px; /* Bordas arredondadas da estrutura */
+  background-color: #f0f0f0; /* Cor do fundo da estrutura */
+  padding: -10px 10rem 10px 10rem;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Sombra */
+  display: flex;
+  margin-left: -2px; 
+  flex-direction: column;
+  /*align-items:center; */
+  /*justify-content: center;*/
+}
+
+.btnimport{
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.aluno-container-Imp-Exp {
+  position: relative;
+  margin-left: var(--sidebar-width); /* Ajusta a margem para a largura da sidebar */
+  width: calc(100% - var(--sidebar-width)); /* Ajusta a largura considerando o espaço da sidebar */
+  padding: 10px 10px 20rem;
+  background-color: #f0f0f0;
+  overflow: auto;
+  margin-left: 10rem;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease, width 0.3s ease; /* Transição suave */
+}
+
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.card {
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+h3 {
+  color: #333;
+}
+
+.custom-file-label {
+  border-radius: 5px;
+}
+
+.btn {
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.shadow-sm {
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btnExpAcertar{
+  padding: 10px 10px;
+}

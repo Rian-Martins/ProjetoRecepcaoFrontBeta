@@ -106,12 +106,12 @@ function Home() {
         <h1>Bem-Vindo à Página Inicial</h1>
       </div>
       <div className="aluno-container">
-        <h3>Selecione a planilha que preferir</h3>
+        <h3>Selecione dia e horario para filtrar as informações!!</h3>
 
         <button className="btn btn-primary" onClick={abrirFecharModalEscolhaPlanilhaDia}>
           Filtro da Planilha da Rematricula
         </button>
-
+        <br />
         <Modal isOpen={modalEscolhaPlanilhaDia}>
           <ModalHeader>Planilha de Reposição</ModalHeader>
           <ModalBody>
