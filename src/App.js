@@ -41,7 +41,7 @@ function App() {
         </div>
       </Router>
       <div className="aluno-container">
-        {/* Conteúdo adicional pode ser adicionado aqui */}
+        
       </div>
     </div>
   );
